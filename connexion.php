@@ -8,7 +8,46 @@ if(isset($_POST['session_fin']))
     //détruit la session
     session_destroy();
 }
+    
+/*routine de validation des données*/
+    
+//connexion en tant que membre:
+if (isset($_POST['submit'])) {
+    function valid_data($data){
+        $data = trim($data);/*enlève les espaces en début et fin de chaîne*/
+        $data = stripslashes($data);/*enlève les slashs dans les textes*/
+        $data = htmlspecialchars($data);/*enlève les balises html comme ""<>...*/
+        return $data;
+    }
+        /*on récupère les valeurs login ,password du formulaire et on y applique
+         les filtres de la fonction valid_data*/
+        $login = valid_data($_POST["login"]);
+        $password = $_POST["password"];
+            
+    
+          $db=mysqli_connect("localhost","root","","livreor");
+        /*on prépare une requête pour vérifier les données de l'utilisateur */
+        $read_utilisateur= "SELECT * FROM utilisateurs WHERE login='$login'";
+        $requete = mysqli_query($db, $read_utilisateur);
+        $result = mysqli_fetch_all($requete);
+        
+            if (empty($result))//champs vide
+            {
+                $error="Ce login n'existe pas!";
+            }
+            elseif (password_verify($password, $result[0][2]))//vérification de password
+            { 
+                $_SESSION['login']=$result[0][1];                                      
+            } 
+            else //si password différent
+            {
+                $error='Le mot de passe est invalide.';
+                mysqli_close($db);
+            }
+}
+       
 ?>
+    
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -44,16 +83,13 @@ if(isset($_POST['session_fin']))
                     <?php 
                     if(isset($_SESSION['login'])) //message de connexion dans la navbar et bouton de déconnexion
                     {
-                        echo '<li class="nav-item active align-right">
-                        <span class="nav-link">Vous êtes connecté(e)</span>    
-                        </li>';
                         echo '<li class="nav-item align-right">
                         <form action="connexion.php" method="post">                                            
                             <button type="submit" class="btn btn-info" name="session_fin">Déconnexion</button><br/>                        
                         </form>
                         </li>';
                     }
-                    else
+                    else //si on est pas connecté:
                     {
                         echo '<li class="nav-item">                        
                             <a class="nav-link" href="inscription.php">S\'inscrire</a>
@@ -72,10 +108,28 @@ if(isset($_POST['session_fin']))
                 <h1>Connexion</h1>
                 <p class="lead">Veuillez vous connecter pour ajouter un commentaire.</p>
                 <hr class="my-4">
-                <form action="connexion.php" method="post">
-                    <fieldset>
-                       
-                        <div class="form-group">
+                <?php
+                    if(isset($_SESSION['login']) && !isset($_SESSION['update'])){
+                    //connexion valide de l'utilisateur avec mot de passe avant modification 
+                    echo '<p class="h5"> Bonjour, vous êtes connecté(e).<br/><br/>
+                    Pour vérifier ou modifier vos informations:</p>';
+                    echo '<form action="profil.php" method="post"><button type="submit" 
+                    class="btn btn-primary" name="modifier">Modifier votre profil</button></form><br/>';
+                    echo '<p class="h5">Vous pouvez consulter et laisser un commentaire dans le
+                     <a href="livre-or.php">livre d\'or</a>.</p>';
+                    }
+                    elseif(isset($_SESSION['login']) && $_SESSION['update']="Ok"){
+                        //connexion valide de l'utilisateur après modification valide
+                        echo '<h2>Espace membres</h2>';
+                        echo '<p class="h5">Vos informations ont bien été modifiées.</p>';
+                    }
+                    else{ //premier accès à la page ou  erreur de l'utilisateur qui doit se reconnecter
+                        echo '<form action="connexion.php" method="post">
+                            <fieldset>';
+
+                           if(!empty($error)){echo '<p class="h4 text-warning">'.$error.'</p>'; }  
+                        
+                        echo '<div class="form-group">
                         <label for="login">Identifiant</label>
                         <input type="txt" class="form-control" id="login" name="login" 
                         placeholder="login" required>
@@ -88,8 +142,10 @@ if(isset($_POST['session_fin']))
                         </div>  
                  
                         <button type="submit" class="btn btn-primary" name="submit">Valider</button>
-                    </fieldset>
-                </form>
+                        </fieldset>
+                    </form>';
+                    }
+                ?>
             </div>
         </main>
         <footer id="footer">

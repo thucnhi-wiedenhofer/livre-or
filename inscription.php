@@ -7,7 +7,7 @@ if(isset($_SESSION) && !empty($_SESSION)){
     header('location:connexion.php');
 }
 
- elseif (isset($_POST['inscription'])) {
+ elseif (isset($_POST['submit'])) {
     function valid_data($data){
                 $data = trim($data);/*enlève les espaces en début et fin de chaîne*/
                 $data = stripslashes($data);/*enlève les slashs dans les textes*/
@@ -27,8 +27,9 @@ if(isset($_SESSION) && !empty($_SESSION)){
      le formulaire, afin de vérifier que le login n'existe pas déja dans la table*/
     $read_utilisateur= "SELECT * FROM utilisateurs WHERE login='$login'";
     $requete = mysqli_query($db, $read_utilisateur);
+    
     $result = mysqli_fetch_all($requete);
-
+   
             if (!empty($result))
             {
                 $error="Ce login existe déja !";
@@ -138,7 +139,7 @@ if(isset($_SESSION) && !empty($_SESSION)){
                         </div>                       
                         
                         <div class="form-group">
-                        <label for="password">Confirmer votre mot de passe</label>
+                        <label for="conf-password">Confirmer votre mot de passe</label>
                         <input type="password" class="form-control" id="conf-password" 
                         name="conf-password" placeholder="Password" required>
                         </div>                                            

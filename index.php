@@ -8,6 +8,7 @@ if(isset($_POST['session_fin']))
     //détruit la session
     session_destroy();
 }
+
 ?>
 
 <!DOCTYPE html>
