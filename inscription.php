@@ -1,13 +1,60 @@
 <?php
 session_start();
-//déconnexion
-if(isset($_POST['session_fin']))
-{
-    //enlève les variables de la session
-    session_unset();
-    //détruit la session
-    session_destroy();
+
+
+/*routine de validation des données*/
+if(isset($_SESSION) && !empty($_SESSION)){
+    header('location:connexion.php');
 }
+
+ elseif (isset($_POST['inscription'])) {
+    function valid_data($data){
+                $data = trim($data);/*enlève les espaces en début et fin de chaîne*/
+                $data = stripslashes($data);/*enlève les slashs dans les textes*/
+                $data = htmlspecialchars($data);/*enlève les balises html comme ""<>...*/
+                return $data;
+            }
+    /*on récupère les valeurs login ,password, prenom, nom du formulaire et on y applique
+     les filtres de la fonction valid_data*/
+    $login = valid_data($_POST["login"]);
+    $password = $_POST["password"];
+   
+
+    $password = password_hash($password, PASSWORD_DEFAULT);/*Crypte le mot de passe*/
+
+    $db=mysqli_connect("localhost","root","","livreor");
+    /*on prépare une requête pour récupérer les données de l'utilisateur qui a rempli
+     le formulaire, afin de vérifier que le login n'existe pas déja dans la table*/
+    $read_utilisateur= "SELECT * FROM utilisateurs WHERE login='$login'";
+    $requete = mysqli_query($db, $read_utilisateur);
+    $result = mysqli_fetch_all($requete);
+
+            if (!empty($result))
+            {
+                $error="Ce login existe déja !";
+            }
+            elseif ($_POST['password'] != $_POST['conf-password'])
+            {
+                $error="Les mots de passe ne sont pas identiques!";
+            }
+            elseif(empty($_POST['password']))
+            {
+                $error="tous les champs doivent être remplis!";
+            }
+            else
+            {
+                /*si le login est nouveau, on insert les données dans la base livreor,table utilisateurs*/
+            $create="INSERT INTO utilisateurs (login, password)
+                VALUES ('$login','$password')";
+                $query = mysqli_query($db,$create);
+                /* on attribue une valeur login au tableau session si la requéte a fonctionné*/
+                if($query){$_SESSION['login']=$login;}
+                header('Location:connexion.php');
+            }
+    mysqli_close($db);
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -75,7 +122,9 @@ if(isset($_POST['session_fin']))
 
                 <form action="inscription.php" method="post">
                     <fieldset>
-                       
+                       <!-- envoyer un message d'erreur si login existe déjà ou si password invalide-->
+                       <?php if(!empty($error)){echo '<p class="h4 text-warning">'.$error.'</p>'; } ?> 
+
                         <div class="form-group">
                         <label for="login">Identifiant</label>
                         <input type="txt" class="form-control" id="login" name="login" 
