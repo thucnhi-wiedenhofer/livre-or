@@ -7,3 +7,10 @@
     height: 30em;
     
 }
+
+.change{
+    background-image: url("../images/livreor.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: center;
+}
