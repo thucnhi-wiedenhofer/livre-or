@@ -79,8 +79,8 @@ mysqli_close($db);
         
         <main>
             <div class="container">
-                <h1 class="display-3">Livre d'or</h1>
-                <p class="lead">Nos clients ont laissé des commentaires que vous pouvez consulter.</p>
+                <h1 class="display-3">Livre d'or</h1><br/>
+                <p class="lead">Nos clients ont laissé des commentaires que vous pouvez consulter.</p><br/>
                 <?php
                 
                  while ($resultat= mysqli_fetch_assoc($query))
@@ -100,10 +100,15 @@ mysqli_close($db);
                   }
                     if(isset($_SESSION['login'])) //message de connexion dans la navbar et bouton de déconnexion
                     {
-                        echo '<p class="nav-item align-right">Vous êtes connecté(e).
-                            <form action="connexion.php" method="post">                                            
-                                <button type="submit" class="btn btn-info" name="add-comment">Ajouter un commentaire</button><br/>                        
-                            </form></p>';
+                        echo '<p class=" lead text-info">Vous êtes connecté(e).</p>';                        
+                                                  
+                        include "commentaire.php";    
+                    }
+                    else
+                    {
+                        echo '<p class="lead">Veuillez vous <a href="inscription.php">inscrire</a>, 
+                        ou vous <a href="connexion.php">connecter</a>, pour ajouter un 
+                        commentaire.</p>';
                     }
                         
                 ?>
