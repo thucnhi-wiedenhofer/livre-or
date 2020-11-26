@@ -9,13 +9,14 @@ if(isset($_POST['submit']))
     
     if(isset($_POST['message']) AND !empty($_POST['message']))
     {
-        $id_utilisateurs=$_SESSION['id'];
+        $id_utilisateur=$_SESSION['id'];//puisqu'on est déjà connecté
         $message=$_POST['message'];//on recupère le commentaire du formulaire
+
         //on insère le message dans la base livreor, table commentaires
         $insert="INSERT INTO commentaires (commentaire,id_utilisateur,date)
-        VALUES('$message','$id_utilisateur',CURRENT_DATE())";
+        VALUES('$message','$id_utilisateur',NOW())";
         $result=mysqli_query($db,$insert);
-        echo 'votre commentaire a été ajouté avec succès';
+        
         header("Location: livre-or.php");
     }
     else{
@@ -38,7 +39,47 @@ mysqli_close($db);
     <title>commentaire</title>
 </head>
 <body>
-                      
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+            
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item ">
+                    <a class="nav-link" href="index.php">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="livre-or.php">Livre d'or</a>
+                    <span class="sr-only">(current)</span>
+                </li>
+                                        
+                <?php 
+                if(isset($_SESSION['login'])) //si connecté, bouton de déconnexion apparait
+                {
+                    echo '<li class="nav-item align-right">
+                    <form action="connexion.php" method="post">                                            
+                        <button type="submit" class="btn btn-info" name="session_fin">Déconnexion</button><br/>                        
+                    </form>
+                        </li>';
+                }
+                else
+                {
+                    echo '<li class="nav-item">                        
+                            <a class="nav-link" href="inscription.php">S\'inscrire</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="connexion.php">Se connecter</a>
+                        </li>';
+                }
+                ?>
+            </ul>
+        </div>
+    </nav>     
+</header>
+                     
 <main>
     <div class="jumbotron-bis">
         <div class="container"> 
@@ -62,7 +103,23 @@ mysqli_close($db);
         </div>      
     </div>         
 </main>                   
+<div class="container ">
+    <footer id="footer">
+        <div class="row">
+            <div class="col-lg-12">
+                <ul class="list-unstyled">
+                    <li class="float-lg-right"><a href="#top">Back to top</a></li>
                     
+                    <li><a href="https://github.com/thucnhi-wiedenhofer">GitHub</a></li>
+                    
+                </ul>
+                <p>Bootstrap style made by <a href="https://thomaspark.co/">Thomas Park</a>.</p>
+                <p>Code released under the <a href="https://github.com/thomaspark/bootswatch/blob/master/LICENSE">MIT License</a>.</p>
+                    
+            </div>
+        </div>
+    </footer>
+</div>                        
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootstrap.bundle.min.js"></script>
     
