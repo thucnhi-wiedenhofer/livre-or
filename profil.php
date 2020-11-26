@@ -1,12 +1,68 @@
 <?php
 session_start();
-//déconnexion
-if(isset($_POST['session_fin']))
+
+function valid_data($data){  //fonction pour éviter l'injection de code malveillant
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+
+if (isset($_POST['modifier']) && isset($_SESSION['id']))  //un adhérent qui s'est connecté veut modifier ses données
+{    
+    $id=$_SESSION['id'];//on fait la requête sur la seul donnée qui ne change pas:id.
+    $db=mysqli_connect("localhost","root","","livreor");    
+    $read_utilisateur= "SELECT * FROM utilisateurs WHERE id='$id'";
+    $requete = mysqli_query($db, $read_utilisateur);
+    $result = mysqli_fetch_array($requete);
+    mysqli_close($db);
+
+            if (empty($result)) //la requête n'a pas aboutie
+            {
+                $error="Il y a une erreur de lecture de vos données!";               
+            }
+            else //succés on conserve dans des variables les infos de l'adhérent pour remplir le formulaire
+            {
+            $login = $result['login'];
+            $password = $result['password'];
+            $_POST = array(); //initialisation de POST à 0
+            }                         
+}
+
+elseif (isset($_POST['update']) && $_SESSION['id']==$_POST['id'] ) { //l'adhérent a modifié ses données, on conserve en variables ces nouvelles données
+    
+    $id= $_SESSION['id'];
+    $login =valid_data($_POST['login']);
+    $new_Password = $_POST['password'];
+    $new_Password = password_hash($new_Password, PASSWORD_DEFAULT);
+
+    if ($_POST['password'] != $_POST['conf-password'])
+    {
+        $error="Les mots de passe ne sont pas identiques!"; //erreur dans le formulaire
+    }        
+
+    else
+    {
+        $db=mysqli_connect("localhost","root","","livreor");
+         // on update les données  de l'utilisateur dans la base livreor,table utilisateurs
+        $update= "UPDATE utilisateurs SET  login = '$login',password = '$new_Password'
+        WHERE id= '".$id."' ";
+        $query = mysqli_query($db,$update);
+         /* on attribue les nouvelles valeurs au tableau session si la requéte a fonctionné*/
+            if($query && isset($_POST['update']))
+            {
+                $_SESSION['login']=$login;
+                $_SESSION['update']="Ok";
+                header('Location:connexion.php');
+            }
+                
+    }  
+}
+else
 {
-    //enlève les variables de la session
-    session_unset();
-    //détruit la session
-    session_destroy();
+   $error="tous les champs doivent être remplis";
+   header('Location:connexion.php');
 }
 ?>
 
@@ -44,7 +100,7 @@ if(isset($_POST['session_fin']))
                     </li>
                                 
                     <?php 
-                    if(isset($_SESSION['login'])) //message de connexion dans la navbar et bouton de déconnexion
+                    if(isset($_SESSION['login'])&& !empty($_SESSION['login'])) //message de connexion dans la navbar et bouton de déconnexion
                     {
                         echo '<li class="nav-item active align-right">
                         <span class="nav-link">Vous êtes connecté(e)</span>    
@@ -71,31 +127,32 @@ if(isset($_POST['session_fin']))
         <main>
             <div class="jumbotron">
                 <h1>Modifier mon profil</h1>
-                <p class="lead">Veuillez vous inscrire pour ajouter un commentaire.</p>
-                <hr class="my-4">
-
+                
+                <?php if(!empty($error)){echo '<p class="h4 text-warning">'.$error.'</p>'; } //affiche message d'erreur généré dans le script profil.php
+                   ?> 
                 <form action="profil.php"method="post">
                     <fieldset>
                        
                         <div class="form-group">
                         <label for="login">Identifiant</label>
                         <input type="txt" class="form-control" id="login" name="login" 
-                        placeholder="login" required>
+                        value="<?php echo $login; ?>" required>
                         </div>   
 
                         <div class="form-group">
-                        <label for="password"> Nouveau mot de passse</label>
+                        <label for="password">Mot de passse</label>
                         <input type="password" class="form-control" id="password" 
-                        name="password" placeholder="Password" required>
+                        name="password" placeholder="Entrer un nouveau mot de passe" required>
                         </div>                       
                         
                         <div class="form-group">
-                        <label for="password">Confirmer votre nouveau mot de passe</label>
+                        <label for="conf-password">Confirmer votre nouveau mot de passe</label>
                         <input type="password" class="form-control" id="conf-password" 
-                        name="conf-password" placeholder="Password" required>
+                        name="conf-password" placeholder="Mot de passe identique" required>
                         </div>                                            
-                                                    
-                        <button type="submit" class="btn btn-primary" name="submit">Valider</button>
+                        <input type="hidden" name="id" value="<?php echo (int)$id;// conserve la valeur id dans un champs caché du formulaire
+                        ?>">                           
+                        <button type="submit" class="btn btn-primary" name="update">Valider</button>
                     </fieldset>
                 </form>
             </div>

@@ -53,7 +53,7 @@ mysqli_close($db);
                             </li>
                                         
                             <?php 
-                            if(isset($_SESSION['login'])) //message de connexion dans la navbar et bouton de déconnexion
+                            if(isset($_SESSION['login'])) //si connecté, bouton de déconnexion apparait
                             {
                                 echo '<li class="nav-item align-right">
                                 <form action="connexion.php" method="post">                                            
@@ -85,7 +85,7 @@ mysqli_close($db);
                 
                  while ($resultat= mysqli_fetch_assoc($query))
                  {
-                    $date=date('d/m/Y', strtotime($resultat["date"]));
+                    $date=date('d/m/Y', strtotime($resultat["date"]));//fonction pour mettre au format datetime(Y/m/d)
                 ?>
                     
                 
@@ -98,11 +98,13 @@ mysqli_close($db);
                  </div>      
                  <?php
                   }
-                    if(isset($_SESSION['login'])) //message de connexion dans la navbar et bouton de déconnexion
+                    if(isset($_SESSION['login'])) 
                     {
-                        echo '<p class=" lead text-info">Vous êtes connecté(e).</p>';                        
-                                                  
-                        include "commentaire.php";    
+                        //message de connexion apparait et ajout de commentaire possible
+                        echo '<p class=" lead text-info">Vous êtes connecté(e).</p><br/>               
+                                              
+                        <p class="lead"><a class="btn btn-primary btn-lg" href="commentaire.php"
+                         role="button">Ajouter un commentaire</a></p>'; 
                     }
                     else
                     {

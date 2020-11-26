@@ -37,7 +37,8 @@ if (isset($_POST['submit'])) {
             }
             elseif (password_verify($password, $result[0][2]))//vérification de password
             { 
-                $_SESSION['login']=$result[0][1];                                      
+                $_SESSION['login']=$result[0][1];
+                $_SESSION['id']=$result[0][0];                                   
             } 
             else //si password différent
             {
