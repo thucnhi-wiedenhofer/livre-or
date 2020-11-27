@@ -84,14 +84,14 @@ mysqli_close($db);
                 
                 while ($resultat= mysqli_fetch_assoc($query))
                 {
-                    $date=date('d/m/Y', strtotime($resultat["date"]));//fonction pour mettre au format datetime(Y/m/d)
+                    $date=date('d/m/Y', strtotime($resultat["date"]));//fonction pour mettre au format français
                 ?>
                     
                 <div class="card bg-light border-success mb-3" style="max-width: 40rem;">
                     <div class="card-body"><?php echo $resultat["commentaire"]; ?></div>                     
                      
                     <div class="card-footer">
-                        <p class="card-text">Posté le <?php echo $resultat["date"]; ?> par <?php echo $resultat["login"]; ?>.</p>
+                        <p class="card-text">Posté le <?php echo $date; ?> par <?php echo $resultat["login"]; ?>.</p>
                     </div>
                 </div>
                      
