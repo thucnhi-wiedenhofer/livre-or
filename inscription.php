@@ -120,9 +120,10 @@ if(isset($_SESSION) && !empty($_SESSION)){
                 <h1>Inscription</h1>
                 <p class="lead">Veuillez vous inscrire pour ajouter un commentaire.</p>
                 <hr class="my-4">
-
-                <form action="inscription.php" method="post">
-                    <fieldset>
+                
+                <section class="col-lg-6 col-sm-12">
+                    <form action="inscription.php" method="post">
+                        <fieldset>
                        <!-- envoyer un message d'erreur si login existe déjà ou si password invalide-->
                        <?php if(!empty($error)){echo '<p class="h4 text-warning">'.$error.'</p>'; } ?> 
 
@@ -145,8 +146,9 @@ if(isset($_SESSION) && !empty($_SESSION)){
                         </div>                                            
                                                     
                         <button type="submit" class="btn btn-primary" name="submit">Envoyer</button>
-                    </fieldset>
-                </form>
+                        </fieldset>
+                    </form>
+                </section>
             </div>
         </main>
         <footer id="footer">

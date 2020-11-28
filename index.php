@@ -21,11 +21,11 @@ if(isset($_POST['session_fin']))
     <title>Acceuil</title>
 </head>
 <body>
-    <div class="container">
-        <header class="page-header" >
-            <div id="banner"></div>       
+    
+    <header class="page-header" >
+        <div id="banner"></div>       
                     
-        </header>
+    </header>
     
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         
@@ -95,7 +95,7 @@ if(isset($_POST['session_fin']))
                 ?>
             </div>
         </main>  
-
+    <div class="container">
         <footer id="footer">
             <div class="row">
                 <div class="col-lg-12">

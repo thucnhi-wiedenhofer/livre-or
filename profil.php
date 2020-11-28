@@ -126,6 +126,7 @@ else
         </nav>
         <main>
             <div class="jumbotron">
+            <section class="col-lg-6 col-sm-12">
                 <h1>Modifier mon profil</h1>
                 
                 <?php if(!empty($error)){echo '<p class="h4 text-warning">'.$error.'</p>'; } //affiche message d'erreur généré dans le script profil.php
@@ -155,6 +156,7 @@ else
                         <button type="submit" class="btn btn-primary" name="update">Valider</button>
                     </fieldset>
                 </form>
+            </section>    
             </div>
         </main>
         <footer id="footer">

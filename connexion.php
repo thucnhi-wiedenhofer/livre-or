@@ -109,6 +109,7 @@ if (isset($_POST['submit'])) {
                 <h1>Connexion</h1>
                 <p class="lead">Veuillez vous connecter pour ajouter un commentaire.</p>
                 <hr class="my-4">
+                <section class="col-lg-6 col-sm-12">
                 <?php
                     if(isset($_SESSION['login']) && !isset($_SESSION['update'])){
                     //connexion valide de l'utilisateur avec mot de passe avant modification 
@@ -147,6 +148,7 @@ if (isset($_POST['submit'])) {
                     </form>';
                     }
                 ?>
+                </section>
             </div>
         </main>
         <footer id="footer">
