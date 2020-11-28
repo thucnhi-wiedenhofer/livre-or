@@ -23,7 +23,7 @@ if(isset($_POST['session_fin']))
 <body>
     
     <header class="page-header" >
-        <div id="banner"></div>       
+        <div id="banner_index"></div>       
                     
     </header>
     
