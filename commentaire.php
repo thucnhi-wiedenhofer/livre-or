@@ -80,8 +80,9 @@ mysqli_close($db);
     </nav>     
 </header>
                      
-<main>
-    <div class="jumbotron-bis">
+
+<div class="jumbotron-bis">
+    <main>
         <div class="container"> 
             <h1 class="display-3">Livre d'or</h1><br/><br/>         
             <form action="commentaire.php" method="post">    
@@ -100,15 +101,14 @@ mysqli_close($db);
                     </div>
                 </div>
             </form> 
-        </div>      
-    </div>         
-</main>                   
-<div class="container ">
+        </div>     
+    </main>      
+               
     <footer id="footer">
         <div class="row">
             <div class="col-lg-12">
                 <ul class="list-unstyled">
-                    <li class="float-lg-right"><a href="#top">Back to top</a></li>
+                    <li class="float-lg-right"><a href="#top">Back to top</a></li><br/>
                     
                     <li><a href="https://github.com/thucnhi-wiedenhofer">GitHub</a></li>
                     
